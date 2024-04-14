@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.upload-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upload-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+.file-upload {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.custom-file-upload {
+
+    display: inline-block;
+    padding: 10px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+
+}
+
+.custom-file-upload-centered {
+    display: flex;
+    justify-content: center;
+}
+
+.custom-file-upload:hover {
+    background-color: #0056b3;
+}
+.custom-file-upload_2 {
+    display: inline-block;
+    padding: 10px 10px;
+    background-color: #ffffff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.custom-file-upload_2:hover {
+    background-color: #0056b3;
+}
+#fileToUpload {
+    display: none;
+}
+#fileName {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+}
+.file-icon {
+    width: 25px;
+    height: auto;
+
+}

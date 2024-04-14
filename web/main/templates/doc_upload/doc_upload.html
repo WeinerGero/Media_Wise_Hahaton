@@ -1,0 +1,31 @@
+{% extends 'jinja/layout.html' %}
+{% load static %}
+
+{% block title %} Выберите файл для загрузки {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{%static 'main/css/doc_upload.css' %}">
+<div class="upload-container">
+    <h2>Выберите файл для загрузки</h2>
+    <form action="{% url 'model_settings' %}" method="post" enctype="multipart/form-data">
+        <div class="file-upload">
+            {% csrf_token %}
+            <input type="text" id="fileName" readonly>
+            <label for="fileToUpload" class="custom-file-upload_2 ">
+                <img src="{% static 'main/img/folder_icon.png' %}" alt="Иконка папки" class="file-icon">
+            </label>
+            <input type="file" name="fileToUpload" id="fileToUpload" accept=".xlsx" onchange="updateFileName()">
+        </div>
+        <div class="custom-file-upload-centered">
+            <input type="submit" value="Загрузить файл" name="submit" class="custom-file-upload  ustom-file-upload-centered">
+        </div>
+    </form>
+</div>
+
+<script>
+    function updateFileName() {
+        var fileName = document.getElementById("fileToUpload").files[0].name;
+        document.getElementById("fileName").value = fileName;
+    }
+</script>
+{% endblock %}

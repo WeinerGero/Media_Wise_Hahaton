@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Выбор параметров</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+    }
+    .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+    }
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+    }
+    .form-container label {
+        margin-bottom: 10px;
+    }
+    .form-container select {
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+    }
+    .form-container button {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .form-container button:hover {
+        background-color: #0056b3;
+    }
+    .add-button {
+        background-color: #28a745;
+        color: #ffffff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+    .add-button:hover {
+        background-color: #218838;
+    }
+    .parameters-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .target_variable{
+        display: flex;
+        flex-direction: column;
+    }
+    /* Добавленные параметры */
+    .parameter-select {
+        margin-bottom: 10px;
+    }
+    .target_variable_select{
+        margin-bottom: 10px;
+    }
+    /* Скрыть кнопку "Открыть дашборд" по умолчанию */
+    #dashboard-button {
+
+        margin-top: 10px;
+        background-color: #ffc107;
+        color: #000;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: block;
+        margin: 0 auto;
+    }
+    #submit-button{
+        margin-top: 10px;
+        background-color: #ffc107;
+    }
+    #success-message {
+    text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Выбор параметров</h2>
+    <label for="target_variable">Выбор факторов для прогнозирования:</label>
+    <form id="parameters-form" action="/submit_factors" method="post">
+        {% csrf_token %}
+        <div class="parameters-container" id="parameters-container">
+            <!-- Здесь будут добавляться поля выбора параметров динамически -->
+        </div>
+        <button type="button" class="add-button" onclick="addParameter()">Добавить параметр</button>
+        <label for="target_variable">Выбор целевой переменной:</label>
+
+        <div id="target_variable"  class="target_variable">
+            <!-- Добавьте опции для каждой целевой переменной из ранее загруженной таблицы .xlsx -->
+
+            <!-- и так далее -->
+        </div>
+        <button type="button" class="add-button" onclick="addParameter2()">Добавить целевую переменную</button>
+
+        <button type="submit" id="submit-button"  onclick="sendDataToServer()">Построить эконометрическую модель</button>
+        <div id="loading-message" style="display: none; text-align: center;">
+            <p>Пожалуйста, подождите...</p>
+        </div>
+        <div id="success-message" style="display: none; text-align: center;">
+            <p>Ожидайте построения модели</p>
+            <button id="dashboard-button" onclick="openDashboard() ">Открыть дашборд</button>
+        </div>
+
+    </form>
+    <!-- Кнопка "Открыть дашборд" -->
+
+</div>
+
+<script>
+let parameterCounter = 1;
+let parameterCounter2 = 1;
+// Функция для заполнения combo-box названиями столбцов
+function fillParameterSelect(parameterSelect) {
+    // Предположим, что заголовки столбцов сохранены в массиве columns
+    const columnsData = {{ columns|safe }}; // Пример
+    columnsData.forEach(column => {
+        const option = document.createElement('option');
+        option.text = column;
+        parameterSelect.add(option);
+    });
+}
+
+function addParameter() {
+    const loadingMessage = document.getElementById('loading-message');
+    loadingMessage.style.display = 'none';
+    const container = document.getElementById('parameters-container');
+    const parameterSelect = document.createElement('select');
+    parameterSelect.classList.add('parameter-select');
+    parameterSelect.name = `parameter${parameterCounter}`;
+    parameterSelect.id = `parameter${parameterCounter}`;
+    parameterSelect.setAttribute('size', 1); // С одним выбором
+    fillParameterSelect(parameterSelect); // Заполнить combo-box названиями столбцов
+    container.appendChild(parameterSelect);
+    parameterCounter++;
+}
+function addParameter2() {
+    const container = document.getElementById('target_variable');
+    const parameterSelect = document.createElement('select');
+    parameterSelect.classList.add('target_variable_select');
+    parameterSelect.name = `target_variable${parameterCounter2}`;
+    parameterSelect.id = `target_variable${parameterCounter2}`;
+    parameterSelect.setAttribute('size', 1); // С одним выбором
+    fillParameterSelect(parameterSelect); // Заполнить combo-box названиями столбцов
+    container.appendChild(parameterSelect);
+    parameterCounter2++;
+}
+
+// Функция для открытия дашборда
+function openDashboard() {
+    // Здесь должна быть логика открытия дашборда
+    alert('Дашборд открывается...');
+}
+
+// Функция для сбора выбранных значений и отправки на сервер
+function sendDataToServer() {
+    const loadingMessage = document.getElementById('loading-message');
+    loadingMessage.style.display = 'block';
+    const selects = document.querySelectorAll('select'); // Получаем все элементы <select>
+    const selectedValues = {};
+
+    selects.forEach(select => {
+        selectedValues[select.name] = select.value; // Добавляем выбранное значение в объект
+    });
+
+    // Отправляем данные на сервер
+    fetch('/submit_factors', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken() // Функция получения CSRF-токена
+        },
+        body: JSON.stringify(selectedValues) // Отправляем выбранные значения в формате JSON
+    })
+    .then(response => {
+        // Обработка ответа от сервера
+        if (response.ok) {
+            // Если ответ от сервера успешный, показываем сообщение об успешной отправке
+            document.getElementById('success-message').style.display = 'block';
+            document.getElementById('dashboard-button').style.display = 'block';
+        } else {
+            console.error('Ошибка при отправке данных:', response.statusText);
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка при отправке данных:', error);
+    });
+}
+
+// Функция для получения CSRF-токена
+function getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    return csrfToken;
+}
+
+
+</script>
+</body>
+</html>

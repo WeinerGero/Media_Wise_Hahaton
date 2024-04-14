@@ -1,0 +1,19 @@
+{% extends 'jinja/layout.html' %}
+{% load static %}
+
+
+{% block title %} Авторизация {% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{%static 'main/css/authorization.css' %}">
+<div class="login-container">
+    <h2>Авторизация</h2>
+    <form action="{% url 'authorization_check' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Имя пользователя" required>
+        <input type="password" name="password" placeholder="Пароль" required>
+        <input type="submit" value="Войти">
+    </form>
+</div>
+{% endblock %}
